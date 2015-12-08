@@ -36,4 +36,8 @@ readerToEither :: Config -> AppM :~> EitherT ServantErr IO
 readerToEither cfg = Nat $ \x -> runReaderT x cfg
 
 server :: ServerT TimelineAPI AppM
-server = undefined
+server = getTimeline
+    :<|> getTimelineForGroup
+
+getTimeline userId = return sampleTimeline1
+getTimelineForGroup userId groupId = return sampleTimeline2

@@ -12,10 +12,9 @@ import Servant.Docs
 
 type SenderId = Header "UserId" Integer
 type GroupId  = Capture "groupid" Integer
-type TimelineAPI = "timeline" :> SenderId :> 
-    (    Get '[JSON] Timeline
-    :<|> "group" :> GroupId :> Get '[JSON] Timeline
-    )
+type TimelineAPI =
+         "timeline" :> SenderId :> Get '[JSON] Timeline
+    :<|> "timeline" :> SenderId :> "group" :> GroupId :> Get '[JSON] Timeline
 
 timelineAPI :: Proxy TimelineAPI
 timelineAPI = Proxy
