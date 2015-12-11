@@ -10,6 +10,7 @@ module Models.General ( module GHC.Generics
                       , HasId(..)
                       , HasCreator(..)
                       , HasHappend(..)
+                      , HasType(..)
                       , Id
                       , toJSONPrefixed
                       , parseJSONPrefixed
@@ -38,6 +39,10 @@ class HasCreator a where
 
 class HasHappend a where
     happend :: a -> UTCTime
+
+class HasType a where
+    getType :: a -> String
+    getSuperType :: a -> String
 
 instance ToSample Id Id where
     toSample _ = Just 1

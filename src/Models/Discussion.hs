@@ -23,8 +23,9 @@ data Discussion = Discussion
     , discussionCreated       :: UTCTime 
     , discussionUpdated       :: Maybe UTCTime
     , discussionSubPosts      :: [Discussion]
+    , discussionType          :: String
+    , discussionSuperType     :: String
     } deriving (Eq, Generic)
-
 
 instance ToJSON Discussion where 
     toJSON = toJSONPrefixed
@@ -40,6 +41,10 @@ instance HasId Discussion where
 
 instance HasCreator Discussion where
     creator (Discussion {..}) = discussionCreatorId
+
+instance HasType Discussion where
+    getType (Discussion {..}) = discussionType
+    getSuperType (Discussion {..}) = discussionSuperType
 
 instance Show Discussion where
     show d = showIndented 0 d
@@ -62,7 +67,22 @@ instance ToSample Discussion Discussion where
 instance ToSample [Discussion] [Discussion] where
     toSample _ = Just [sampleDiscussionParent]
 
-sampleDiscussionParent = Discussion 
+defaultDiscussion = Discussion
+    { discussionId = 0
+    , discussionCreatorId = 0
+    , discussionGroupId = Nothing
+    , discussionParentPostId = Nothing
+    , discussionSubPostCount = 0
+    , discussionText = ""
+    , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19)
+    , discussionUpdated = Nothing
+    , discussionSubPosts = []
+    , discussionType = "fullPost"
+    , discussionSuperType = "post"
+    }
+
+
+sampleDiscussionParent = defaultDiscussion
     { discussionId = 1
     , discussionCreatorId = 1
     , discussionGroupId = Just 1
@@ -74,7 +94,7 @@ sampleDiscussionParent = Discussion
     , discussionSubPosts = [sampleDiscussionComment1, sampleDiscussionComment2]
     }
 
-sampleDiscussionComment1 = Discussion 
+sampleDiscussionComment1 = defaultDiscussion
     { discussionId = 2
     , discussionCreatorId = 2
     , discussionGroupId = Just 1
@@ -86,7 +106,7 @@ sampleDiscussionComment1 = Discussion
     , discussionSubPosts = []
     }
 
-sampleDiscussionComment2 = Discussion
+sampleDiscussionComment2 = defaultDiscussion
     { discussionId = 3
     , discussionCreatorId = 1
     , discussionGroupId = Just 1

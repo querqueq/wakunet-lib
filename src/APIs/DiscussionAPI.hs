@@ -10,26 +10,11 @@ module APIs.DiscussionAPI where
 
 import Servant
 import Models 
+import APIs.Util
 
 type DiscussionAPI = 
-         "posts" :> Get '[JSON] [Discussion]
-    :<|> "posts" :> Capture "postid" Int :> Get '[JSON] Discussion
-    :<|> "posts" :> "group" :> Capture "groupid" Int :> Get '[JSON] [Discussion]
-{--
-"v1" :> (
-         "users" :> Capture "user-id" Integer :> Get '[JSON] User
-    :<|> "users" :> ReqBody '[JSON] User :> Post '[JSON] Integer
-    :<|> "posts" :> Get '[JSON] [Entity Content]
-    :<|> "posts" :> Capture "post-id" Integer :> Get '[JSON] Content
---    :<|> "post" :> Capture "post-id" Integer :> "full" :> Get '[JSON] PostWithComments
-    :<|> "posts" :> Capture "post-id" Integer :> "comments" :> Get '[JSON] [Entity Content]
-    :<|> "posts" :> ReqBody '[JSON] Content :> Post '[JSON] Integer
-    :<|> "groups" :> Get '[JSON] [Entity Group]
-    :<|> "groups" :> ReqBody '[JSON] Group :> Post '[JSON] Integer
-    :<|> "groups" :> Capture "group-id" Integer :> Get '[JSON] Group
-    :<|> "groups" :> Capture "group-id" Integer :> "members" :> Get '[JSON] [Entity User]
-    :<|> "groups" :> Capture "group-id" Integer :> "join" :> Capture "user-id" Integer :> Put '[JSON] Integer
-    )--}
-
+         "posts" :> SenderId :> Get '[JSON] [Discussion]
+    :<|> "posts" :> SenderId :> Capture "postid" Int :> Get '[JSON] Discussion
+    :<|> "posts" :> SenderId :> "group" :> Capture "groupid" Int :> Get '[JSON] [Discussion]
 discussionAPI :: Proxy DiscussionAPI
 discussionAPI = Proxy

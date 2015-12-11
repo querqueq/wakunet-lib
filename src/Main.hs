@@ -12,7 +12,7 @@ main = do
     port <- lookupSetting "PORT" 8082
     let cfg = defaultConfig { getEnv = env }
         logger = setLogger env
-    run port $ logger $ app cfg
+    run port $ logger app
 
 lookupSetting :: Read a => String -> a -> IO a
 lookupSetting env def = do
