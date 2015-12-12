@@ -33,8 +33,8 @@ instance ToJSON Event where
 instance FromJSON Event where 
     parseJSON = parseJSONPrefixed
 
-instance HasHappend Event where
-    happend (Event {..}) = eventFromDate
+instance HasHappened Event where
+    happened (Event {..}) = eventFromDate
 
 instance HasId Event where
     identifier (Event {..}) = eventId   

@@ -26,7 +26,7 @@ instance ToJSON Timeline where
     toJSON = toJSONPrefixed
 
 data Meta = Meta 
-    { metaHappend       :: UTCTime
+    { metaHappened       :: UTCTime
     , metaContent       :: Content
     , metaType          :: String
     , metaSuperType     :: String
@@ -39,9 +39,9 @@ data Content = ContentDiscussion Discussion
              | ContentEvent Event
              deriving Show
 
-instance HasHappend Content where
-    happend (ContentDiscussion x) = happend x
-    happend (ContentEvent x) = happend x
+instance HasHappened Content where
+    happened (ContentDiscussion x) = happened x
+    happened (ContentEvent x) = happened x
 
 instance HasType Content where
     getType (ContentDiscussion x) = getType x
@@ -58,18 +58,19 @@ instance ToSample Timeline Timeline where
                   , ("Timeline for 25th Dec 2015", sampleTimeline2)
                   ]
 
-timeline :: UTCTime -> [Content] -> Timeline
-timeline till content = Timeline till 
+timeline :: Maybe UTCTime -> UTCTime -> [Content] -> Timeline
+timeline (Just from) till content = timeline Nothing till $ filter (\x -> happened x > from) content
+timeline _ till content = Timeline till 
     $ map attachMeta 
-    $ sortBy (\x y -> compare (happend y) (happend x)) 
-    $ filter (\x -> happend x < till) content
+    $ sortBy (\x y -> compare (happened y) (happened x)) 
+    $ filter (\x -> happened x < till) content
 
 attachMeta :: Content -> Meta
-attachMeta c = Meta (happend c) c (getType c) (getSuperType c)
+attachMeta c = Meta (happened c) c (getType c) (getSuperType c)
 
 sampleTimeline1 = sampleTimeline (UTCTime (fromGregorian 2015 12 20) (60*60*2))
 sampleTimeline2 = sampleTimeline (UTCTime (fromGregorian 2015 12 25) (60*60*12))
-sampleTimeline till = timeline till 
+sampleTimeline till = timeline Nothing till 
     [ ContentDiscussion sampleDiscussionParent
     , ContentEvent sampleEvent1
     , ContentEvent sampleEvent2

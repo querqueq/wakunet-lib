@@ -9,7 +9,7 @@ module Models.General ( module GHC.Generics
                       , FromJSON(parseJSON)
                       , HasId(..)
                       , HasCreator(..)
-                      , HasHappend(..)
+                      , HasHappened(..)
                       , HasType(..)
                       , Id
                       , toJSONPrefixed
@@ -37,8 +37,8 @@ class HasId a where
 class HasCreator a where
     creator :: a -> Id
 
-class HasHappend a where
-    happend :: a -> UTCTime
+class HasHappened a where
+    happened :: a -> UTCTime
 
 class HasType a where
     getType :: a -> String

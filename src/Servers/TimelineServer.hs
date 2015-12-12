@@ -32,18 +32,18 @@ import Servers.Errors
 app :: Application
 app = serve timelineAPI server
 
-server = timelineServer
-    where timelineServer sId = 
-                 ioEitherToEitherT (getTimeline sId)
-            :<|> getTimelineForGroup sId
+server :: Server TimelineAPI
+server = timelineServer where timelineServer senderId from till group = ioEitherToEitherT (getTimeline senderId from till group)
 
-getTimeline :: Maybe Id -> IO (Either ServantErr Timeline)
-getTimeline Nothing = return $ Left errNoSenderId
-getTimeline userId = do
-    now <- getCurrentTime
-    content <- runEitherT (getDiscussions userId) >>= return . (fmap (map ContentDiscussion))
+getTimeline :: Maybe Id -> Maybe UTCTime -> Maybe UTCTime -> Maybe Id -> IO (Either ServantErr Timeline)
+getTimeline Nothing _ _ _ = return $ Left errNoSenderId
+getTimeline x y Nothing z = getCurrentTime >>= \now -> getTimeline x y (Just now) z
+getTimeline userId from (Just till) group = do
+    let apiCall = case group of
+                    (Just x) -> getDiscussionsForGroup userId x
+                    Nothing -> getDiscussions userId
+    content <- runEitherT apiCall >>= return . (fmap (map ContentDiscussion))
     case content of
         Right x -> do
-            return $ Right $ timeline now x
+            return $ Right $ timeline from till x
         Left x -> return $ Left $ errForward x
-getTimelineForGroup userId groupId = return sampleTimeline2

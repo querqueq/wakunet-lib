@@ -23,7 +23,7 @@ data Discussion = Discussion
     , discussionCreated       :: UTCTime 
     , discussionUpdated       :: Maybe UTCTime
     , discussionSubPosts      :: [Discussion]
-    , discussionType          :: String
+    , discussionType          :: Maybe String
     , discussionSuperType     :: String
     } deriving (Eq, Generic)
 
@@ -33,8 +33,8 @@ instance ToJSON Discussion where
 instance FromJSON Discussion where 
     parseJSON = parseJSONPrefixed
 
-instance HasHappend Discussion where
-    happend (Discussion {..}) = discussionCreated
+instance HasHappened Discussion where
+    happened (Discussion {..}) = discussionCreated
 
 instance HasId Discussion where
     identifier (Discussion {..}) = discussionId
@@ -43,7 +43,8 @@ instance HasCreator Discussion where
     creator (Discussion {..}) = discussionCreatorId
 
 instance HasType Discussion where
-    getType (Discussion {..}) = discussionType
+    getType (Discussion {discussionType = Just x}) = x
+    getType (Discussion {discussionType = Nothing}) = ""
     getSuperType (Discussion {..}) = discussionSuperType
 
 instance Show Discussion where
@@ -77,7 +78,7 @@ defaultDiscussion = Discussion
     , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19)
     , discussionUpdated = Nothing
     , discussionSubPosts = []
-    , discussionType = "fullPost"
+    , discussionType = Just "fullPost"
     , discussionSuperType = "post"
     }
 
