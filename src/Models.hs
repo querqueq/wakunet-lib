@@ -6,3 +6,4 @@ module Models ( module Models.Discussion
 import Models.Discussion
 import Models.Event
 import Models.Timeline
+import Models.Rating

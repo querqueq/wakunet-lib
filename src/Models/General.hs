@@ -21,9 +21,10 @@ import Data.Aeson.Types
 import Data.Aeson.Casing
 import GHC.Generics
 import Data.Time            (UTCTime)
+import Data.Int             (Int64)
 import Servant.Docs
 
-type Id = Integer
+type Id = Int64
 
 toJSONPrefixed :: (Generic a, GToJSON (Rep a)) => a -> Value
 toJSONPrefixed = genericToJSON $ aesonPrefix camelCase

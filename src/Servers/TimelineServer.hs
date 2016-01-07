@@ -17,15 +17,18 @@ import Control.Monad.Reader         (ReaderT, runReaderT, lift, MonadReader
 import Control.Monad.Trans.Either   (EitherT, left, right, runEitherT, hoistEither)
 import Network.Wai                  (Application)
 import Data.Time                    (getCurrentTime, fromGregorian, UTCTime(..))
+import Data.Either.Combinators      (rightToMaybe)
 
 import Config    (Config(..))
 import Servant
 import Servant.Common.Req           (ServantError(..))
 
 import Models.Timeline
-import Models.General               (Id)
+import Models.General               
+import Models.Rating
 import APIs.TimelineAPI
 import Clients.DiscussionClient
+import Clients.RatingClient
 import Servers.Util
 import Servers.Errors
 
@@ -45,5 +48,13 @@ getTimeline userId from (Just till) group = do
     content <- runEitherT apiCall >>= return . (fmap (map ContentDiscussion))
     case content of
         Right x -> do
-            return $ Right $ timeline from till x
+            ratings <- runEitherT $ bulkRatings userId $ contentKeys x
+            return $ Right $ timeline from till x $ rightToList ratings
         Left x -> return $ Left $ errForward x
+
+rightToList :: Either a [b] -> [b]
+rightToList (Right xs) = xs
+rightToList (Left _) = []
+
+contentKeys :: [Content] -> [ContentKey]
+contentKeys = map (\c -> ContentKey (identifier c) (getSuperType c))

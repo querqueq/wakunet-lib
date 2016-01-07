@@ -11,10 +11,12 @@ module Models.Timeline where
 import Models.General
 import Models.Discussion
 import Models.Event
+import Models.Rating
 import Data.Time        (UTCTime(..),fromGregorian)
 import Data.Maybe       (fromMaybe)
 import Data.List        (sort,sortBy)
 import Data.Dynamic
+import qualified Data.Map as M
 import Servant.Docs     (ToSample(..))
 
 data Timeline = Timeline 
@@ -26,10 +28,11 @@ instance ToJSON Timeline where
     toJSON = toJSONPrefixed
 
 data Meta = Meta 
-    { metaHappened       :: UTCTime
+    { metaHappened      :: UTCTime
     , metaContent       :: Content
     , metaType          :: String
     , metaSuperType     :: String
+    , metaRatings       :: Maybe Ratings
     } deriving (Generic, Show)
 
 instance ToJSON Meta where 
@@ -38,6 +41,10 @@ instance ToJSON Meta where
 data Content = ContentDiscussion Discussion 
              | ContentEvent Event
              deriving Show
+
+instance HasId Content where
+    identifier (ContentDiscussion x) = identifier x
+    identifier (ContentEvent x) = identifier x
 
 instance HasHappened Content where
     happened (ContentDiscussion x) = happened x
@@ -58,15 +65,17 @@ instance ToSample Timeline Timeline where
                   , ("Timeline for 25th Dec 2015", sampleTimeline2)
                   ]
 
-timeline :: Maybe UTCTime -> UTCTime -> [Content] -> Timeline
-timeline (Just from) till content = timeline Nothing till $ filter (\x -> happened x > from) content
-timeline _ till content = Timeline till 
-    $ map attachMeta 
+timeline :: Maybe UTCTime -> UTCTime -> [Content] -> [Ratings] -> Timeline
+timeline (Just from) till content ratings = timeline Nothing till (filter (\x -> happened x > from) content) ratings
+timeline _ till content ratings = Timeline till 
+    $ map    (\x -> attachMeta (M.lookup (ContentKey (identifier x) (getSuperType x)) ratingsMap) x)
     $ sortBy (\x y -> compare (happened y) (happened x)) 
     $ filter (\x -> happened x < till) content
+    where ratingsMap = foldr (\r m -> M.insert (contentKey r) r m) M.empty ratings
 
-attachMeta :: Content -> Meta
-attachMeta c = Meta (happened c) c (getType c) (getSuperType c)
+
+attachMeta :: Maybe Ratings -> Content -> Meta
+attachMeta r c = Meta (happened c) c (getType c) (getSuperType c) r
 
 sampleTimeline1 = sampleTimeline (UTCTime (fromGregorian 2015 12 20) (60*60*2))
 sampleTimeline2 = sampleTimeline (UTCTime (fromGregorian 2015 12 25) (60*60*12))
@@ -75,3 +84,4 @@ sampleTimeline till = timeline Nothing till
     , ContentEvent sampleEvent1
     , ContentEvent sampleEvent2
     ]
+    [sampleRatings]
