@@ -11,3 +11,5 @@ import Clients.RatingClient
 import Clients.EventClient
 import Models
 import Control.Monad.Trans.Either   (runEitherT,EitherT)
+
+-- TODO make clients configureable (no hardcoded targets)
