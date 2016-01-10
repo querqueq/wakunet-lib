@@ -8,6 +8,7 @@
 {-# LANGUAGE OverloadedStrings      #-}
 module Models.Timeline where
 
+import Control.Applicative
 import Models.General
 import Models.Discussion
 import Models.Event
@@ -26,17 +27,20 @@ data Timeline = Timeline
 
 instance ToJSON Timeline where 
     toJSON = toJSONPrefixed
+instance FromJSON Timeline where
+    parseJSON = parseJSONPrefixed
 
 data Meta = Meta 
     { metaHappened      :: UTCTime
     , metaContent       :: Content
-    , metaType          :: String
-    , metaSuperType     :: String
     , metaRatings       :: Maybe Ratings
     } deriving (Generic, Show)
 
 instance ToJSON Meta where 
     toJSON = toJSONPrefixed
+
+instance FromJSON Meta where 
+    parseJSON = parseJSONPrefixed
 
 data Content = ContentDiscussion Discussion 
              | ContentEvent Event
@@ -60,6 +64,10 @@ instance ToJSON Content where
     toJSON (ContentDiscussion x) = toJSON x
     toJSON (ContentEvent x)     = toJSON x
 
+instance FromJSON Content where
+    parseJSON x = ContentDiscussion <$> parseJSON x
+              <|> ContentEvent <$> parseJSON x
+
 instance ToSample Timeline Timeline where
     toSamples _ = [ ("Timeline for 20th Dec 2015", sampleTimeline1)
                   , ("Timeline for 25th Dec 2015", sampleTimeline2)
@@ -75,7 +83,7 @@ timeline _ till content ratings = Timeline till
 
 
 attachMeta :: Maybe Ratings -> Content -> Meta
-attachMeta r c = Meta (happened c) c (getType c) (getSuperType c) r
+attachMeta r c = Meta (happened c) c r
 
 sampleTimeline1 = sampleTimeline (UTCTime (fromGregorian 2015 12 20) (60*60*2))
 sampleTimeline2 = sampleTimeline (UTCTime (fromGregorian 2015 12 25) (60*60*12))

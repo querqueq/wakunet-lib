@@ -13,6 +13,7 @@ import APIs.Util
 import Data.Text        (Text, pack, unpack, split)
 
 import Models.Rating 
+import Models.General
 
 type CaptureContentType = Capture "contentType" ContentType
 type CaptureContentId   = Capture "contentId" ContentId

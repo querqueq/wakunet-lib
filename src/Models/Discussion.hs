@@ -24,7 +24,8 @@ data Discussion = Discussion
     , discussionUpdated       :: Maybe UTCTime
     , discussionSubPosts      :: [Discussion]
     , discussionType          :: Maybe String
-    , discussionSuperType     :: String
+    --, discussionSuperType     :: String
+    , discussionContentKey    :: ContentKey
     } deriving (Eq, Generic)
 
 instance ToJSON Discussion where 
@@ -45,7 +46,7 @@ instance HasCreator Discussion where
 instance HasType Discussion where
     getType (Discussion {discussionType = Just x}) = x
     getType (Discussion {discussionType = Nothing}) = ""
-    getSuperType (Discussion {..}) = discussionSuperType
+    getSuperType (Discussion {..}) = contentType discussionContentKey
 
 instance Show Discussion where
     show d = showIndented 0 d
@@ -79,7 +80,7 @@ defaultDiscussion = Discussion
     , discussionUpdated = Nothing
     , discussionSubPosts = []
     , discussionType = Just "fullPost"
-    , discussionSuperType = "post"
+    , discussionContentKey = ContentKey 0 "post"
     }
 
 

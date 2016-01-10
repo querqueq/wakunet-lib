@@ -28,6 +28,9 @@ timelineAPI = Proxy
 instance FromText UTCTime where
     fromText t = parseTimeM True defaultTimeLocale "%F" (unpack t)
 
+instance ToText UTCTime where
+    toText t = pack $ formatTime defaultTimeLocale "%F" t
+
 instance ToParam FromParam where
     toParam _ = DocQueryParam 
         "from" 

@@ -4,6 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE TemplateHaskell        #-}
 {-# LANGUAGE TypeSynonymInstances   #-}
+{-# LANGUAGE DeriveGeneric          #-}
 module Models.General ( module GHC.Generics
                       , ToJSON(toJSON)
                       , FromJSON(parseJSON)
@@ -11,7 +12,8 @@ module Models.General ( module GHC.Generics
                       , HasCreator(..)
                       , HasHappened(..)
                       , HasType(..)
-                      , Id
+                      , Id, ContentType, ContentId 
+                      , ContentKey(..)
                       , toJSONPrefixed
                       , parseJSONPrefixed
                       ) where
@@ -25,6 +27,18 @@ import Data.Int             (Int64)
 import Servant.Docs
 
 type Id = Int64
+
+type ContentType = String
+type ContentId = Id
+type UserId = Id
+
+data ContentKey = ContentKey
+    { contentId     :: ContentId
+    , contentType   :: ContentType
+    } deriving (Show, Generic, Eq, Ord)
+
+instance ToJSON ContentKey
+instance FromJSON ContentKey
 
 toJSONPrefixed :: (Generic a, GToJSON (Rep a)) => a -> Value
 toJSONPrefixed = genericToJSON $ aesonPrefix camelCase

@@ -10,7 +10,7 @@ module Models.Event where
 
 import Models.General
 import Data.Time        (UTCTime(..),fromGregorian)
-import Data.Maybe       (fromMaybe)
+import Data.Maybe       (fromMaybe, maybe)
 import Servant.Docs     (ToSample(..))
 
 data Event = Event
@@ -23,7 +23,8 @@ data Event = Event
     , eventLocation         :: String
     , eventDescription      :: String
     , eventParticipants     :: [Id]
-    , eventType             :: String
+    , eventType             :: Maybe String
+    , eventContentKey       :: ContentKey
     } deriving (Eq, Generic, Show)
 
 
@@ -43,8 +44,8 @@ instance HasCreator Event where
     creator (Event {..}) = eventCreatorId
 
 instance HasType Event where
-    getType (Event {..}) = eventType
-    getSuperType (Event {..}) = eventType -- FIXME as soon as PlainEvent has supertype fix this
+    getType (Event {..}) = maybe "" id eventType
+    getSuperType (Event {..}) = contentType eventContentKey 
 
 instance ToSample Event Event where
     toSample _ = Just sampleEvent1
@@ -62,7 +63,8 @@ defaultEvent = Event
     , eventLocation     = ""
     , eventDescription  = ""
     , eventParticipants = []
-    , eventType         = "PlainEvent"
+    , eventType         = Just "PlainEvent"
+    , eventContentKey   = ContentKey 1 "event"
     }
 
 sampleEvent1 = defaultEvent

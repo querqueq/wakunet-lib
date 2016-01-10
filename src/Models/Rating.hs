@@ -23,18 +23,6 @@ import Servant.Docs
 
 import Models.General
 
-type ContentType = String
-type ContentId = Id
-type UserId = Id
-
-data ContentKey = ContentKey
-    { contentId     :: ContentId
-    , contentType   :: ContentType
-    } deriving (Show, Generic, Eq, Ord)
-
-instance ToJSON ContentKey
-instance FromJSON ContentKey
-
 {--
 type ContentKey = (ContentId,ContentType)
 
