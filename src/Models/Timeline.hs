@@ -92,4 +92,7 @@ sampleTimeline till = timeline Nothing till
     , ContentEvent sampleEvent1
     , ContentEvent sampleEvent2
     ]
-    [sampleRatings]
+    [sampleRatingsNoLikes (discussionId sampleDiscussionParent) "post"
+    ,sampleRatingsNoLikes (eventId sampleEvent1) "event"
+    ,sampleRatingsNoLikes (eventId sampleEvent2) "event"
+    ]
