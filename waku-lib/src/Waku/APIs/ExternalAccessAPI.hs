@@ -11,6 +11,7 @@ module Waku.APIs.ExternalAccessAPI where
 import Servant
 import Waku.Models
 import Waku.APIs.Util
+import qualified Data.UUID as U
 
 type CaptureExternalAccessId = Capture "externalid" ExternalAccessId
 type ExternalAccessAPI =
@@ -23,3 +24,9 @@ type ExternalAccessAPI =
 
 externalAccessAPI :: Proxy ExternalAccessAPI
 externalAccessAPI = Proxy
+
+instance ToText ExternalAccessId where
+    toText = U.toText 
+
+instance FromText ExternalAccessId where
+    fromText = U.fromText

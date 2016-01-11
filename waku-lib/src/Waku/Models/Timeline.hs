@@ -81,7 +81,6 @@ timeline _ till content ratings = Timeline till
     $ filter (\x -> happened x < till) content
     where ratingsMap = foldr (\r m -> M.insert (contentKey r) r m) M.empty ratings
 
-
 attachMeta :: Maybe Ratings -> Content -> Meta
 attachMeta r c = Meta (happened c) c r
 

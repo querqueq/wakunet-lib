@@ -10,10 +10,12 @@ module Waku.Models.ExternalAccess where
 
 import Waku.Models.General
 import Data.Time        (UTCTime(..),fromGregorian)
-import Data.Maybe       (fromMaybe)
+import Data.Maybe       (fromMaybe,fromJust)
 import Servant.Docs     (ToSample(..))
+import qualified Data.UUID as U
+import Data.UUID.Aeson
 
-type ExternalAccessId = String
+type ExternalAccessId = U.UUID
 data ExternalAccess = ExternalAccess
     { externalAccessUuid              :: ExternalAccessId
     , externalAccessCreatorId         :: Id
@@ -38,7 +40,7 @@ instance ToSample ExternalAccess ExternalAccess where
     toSample _ = Just $ sampleExternalAccess 1
 
 defaultExternalAccess = ExternalAccess
-    { externalAccessUuid = ""
+    { externalAccessUuid = U.nil
     , externalAccessCreatorId = 1
     , externalAccessEmail = "john@example.org"
     , externalAccessAlias = Just "John"
@@ -48,5 +50,5 @@ defaultExternalAccess = ExternalAccess
     , externalAccessAccessibleContent = ContentKey 13 "post"
     }
 
-sampleExternalAccess 1 = defaultExternalAccess {externalAccessUuid = "1c012ed3-877d-44b8-87ac-eae9b1ef7b1b"}
+sampleExternalAccess 1 = defaultExternalAccess {externalAccessUuid = fromJust $ U.fromString "1c012ed3-877d-44b8-87ac-eae9b1ef7b1b"}
  

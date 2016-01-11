@@ -26,7 +26,7 @@ data Discussion = Discussion
     , discussionType          :: Maybe String
     --, discussionSuperType     :: String
     , discussionContentKey    :: ContentKey
-    } deriving (Eq, Generic)
+    } deriving (Eq, Generic, Show)
 
 instance ToJSON Discussion where 
     toJSON = toJSONPrefixed
@@ -48,6 +48,7 @@ instance HasType Discussion where
     getType (Discussion {discussionType = Nothing}) = ""
     getSuperType (Discussion {..}) = contentType discussionContentKey
 
+{--
 instance Show Discussion where
     show d = showIndented 0 d
         where showIndented n (Discussion {..}) = "\n" ++ unlines ( 
@@ -62,6 +63,7 @@ instance Show Discussion where
                 )
                 ++ (foldl (++) "" $ map (showIndented (n+1)) discussionSubPosts)
               indent n = replicate n '\t'
+--}
 
 instance ToSample Discussion Discussion where
     toSample _ = Just sampleDiscussionParent
