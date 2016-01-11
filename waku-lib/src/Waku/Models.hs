@@ -3,9 +3,11 @@ module Waku.Models
     , module Waku.Models.Event
     , module Waku.Models.Timeline
     , module Waku.Models.Rating
+    , module Waku.Models.ExternalAccess
     ) where
 
 import Waku.Models.Discussion
 import Waku.Models.Event
 import Waku.Models.Timeline
 import Waku.Models.Rating
+import Waku.Models.ExternalAccess

@@ -13,7 +13,9 @@ module Waku.Models.General
     , HasCreator(..)
     , HasHappened(..)
     , HasType(..)
-    , Id, ContentType, ContentId
+    , Id
+    , ContentType
+    , ContentId
     , ContentKey(..)
     , toJSONPrefixed
     , parseJSONPrefixed
@@ -31,7 +33,6 @@ type Id = Int64
 
 type ContentType = String
 type ContentId = Id
-type UserId = Id
 
 data ContentKey = ContentKey
     { contentId     :: ContentId
