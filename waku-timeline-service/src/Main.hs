@@ -3,8 +3,8 @@ module Main where
 import Network.Wai.Handler.Warp    (run)
 import System.Environment          (lookupEnv)
 
-import Config (defaultConfig, Config(..), Environment(..), setLogger)
-import Servers.TimelineServer
+import Config                      (defaultConfig, Config(..), Environment(..), setLogger)
+import Waku.Timeline.Server
 
 main :: IO ()
 main = do

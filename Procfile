@@ -1,1 +1,1 @@
-web: bin/wakunet-timeline-service_x86_64
+web: bin/waku-timeline-service_x86_64

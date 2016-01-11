@@ -1,8 +1,8 @@
 #!/bin/sh
-cd timeline-service
+cd waku-timeline-service
 cabal update
 cabal install --only-dependencies
 cabal configure
 cabal build
-cp -f dist/build/timeline-service/timeline-service ../bin/wakunet-timeline-service_x86_64
+cp -f ./dist/build/waku-timeline-service/waku-timeline-service ../bin/waku-timeline-service_x86_64
 cd ..

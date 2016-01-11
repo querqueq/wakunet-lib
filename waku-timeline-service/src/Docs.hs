@@ -1,6 +1,6 @@
 module Docs where
 
-import APIs.TimelineAPI
+import Waku.APIs.TimelineAPI
 import Servant.Docs
 
 apiDocs :: API
