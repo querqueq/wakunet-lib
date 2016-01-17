@@ -34,6 +34,9 @@ instance ToJSON Event where
 instance FromJSON Event where 
     parseJSON = parseJSONPrefixed
 
+instance HasContentKey Event where
+    contentKey = eventContentKey
+
 instance HasHappened Event where
     happened (Event {..}) = eventFromDate
 

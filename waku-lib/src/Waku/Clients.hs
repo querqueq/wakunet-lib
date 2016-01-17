@@ -4,6 +4,8 @@ module Waku.Clients
     , module Waku.Clients.RatingClient
     , module Waku.Clients.EventClient
     , module Waku.Clients.ExternalAccessClient
+    , module Waku.Clients.UserClient
+    , module Waku.Clients.NotificationClient
     ) where
 
 import Waku.Clients.Util
@@ -12,6 +14,8 @@ import Waku.Clients.TimelineClient
 import Waku.Clients.RatingClient
 import Waku.Clients.EventClient
 import Waku.Clients.ExternalAccessClient
+import Waku.Clients.UserClient
+import Waku.Clients.NotificationClient
 import Control.Monad.Trans.Either   (runEitherT,EitherT)
 
 -- TODO make clients configureable (no hardcoded targets)

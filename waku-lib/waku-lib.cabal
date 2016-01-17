@@ -13,7 +13,36 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:    Waku.Clients, Waku.Models, Waku.Servers.Errors, Waku.Servers.Util, Waku.APIs.DiscussionAPI, Waku.APIs.TimelineAPI, Waku.APIs.RatingAPI, Waku.APIs.EventAPI, Waku.APIs.ExternalAccessAPI, Waku.APIs.Util, Waku.Clients.DiscussionClient, Waku.Clients.RatingClient, Waku.Clients.EventClient, Waku.Clients.Util, Waku.Clients.TimelineClient, Waku.Clients.ExternalAccessClient, Waku.Models.Rating, Waku.Models.Event, Waku.Models.Discussion, Waku.Models.General, Waku.Models.Timeline, Waku.Models.ExternalAccess
+  exposed-modules:
+      Waku.Clients
+    , Waku.Models
+    , Waku.Servers.Errors
+    , Waku.Servers.Util
+    , Waku.APIs.DiscussionAPI
+    , Waku.APIs.TimelineAPI
+    , Waku.APIs.RatingAPI
+    , Waku.APIs.EventAPI
+    , Waku.APIs.ExternalAccessAPI
+    , Waku.APIs.UserAPI
+    , Waku.APIs.Util
+    , Waku.APIs.NotificationAPI
+    , Waku.Clients.DiscussionClient
+    , Waku.Clients.RatingClient
+    , Waku.Clients.EventClient
+    , Waku.Clients.Util
+    , Waku.Clients.TimelineClient
+    , Waku.Clients.ExternalAccessClient
+    , Waku.Clients.UserClient
+    , Waku.Clients.NotificationClient
+    , Waku.Models.Rating
+    , Waku.Models.Event
+    , Waku.Models.Discussion
+    , Waku.Models.General
+    , Waku.Models.Timeline
+    , Waku.Models.ExternalAccess
+    , Waku.Models.Profile
+    , Waku.Models.User
+    , Waku.Models.Notification
   -- other-modules:
   other-extensions:    OverloadedStrings, RecordWildCards, DataKinds, TypeOperators, TypeFamilies, FlexibleContexts, PolyKinds, FlexibleInstances, MultiParamTypeClasses, TypeSynonymInstances, DeriveGeneric, GeneralizedNewtypeDeriving, EmptyDataDecls, GADTs, QuasiQuotes, TemplateHaskell, FunctionalDependencies
   build-depends:

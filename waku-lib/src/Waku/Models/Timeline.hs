@@ -13,8 +13,9 @@ import Waku.Models.General
 import Waku.Models.Discussion
 import Waku.Models.Event
 import Waku.Models.Rating
+import Waku.Models.Notification
 import Data.Time        (UTCTime(..),fromGregorian)
-import Data.Maybe       (fromMaybe)
+import Data.Maybe       (fromMaybe, isJust)
 import Data.List        (sort,sortBy)
 import Data.Dynamic
 import qualified Data.Map as M
@@ -34,6 +35,7 @@ data Meta = Meta
     { metaHappened      :: UTCTime
     , metaContent       :: Content
     , metaRatings       :: Maybe Ratings
+    , metaSubscribed    :: Bool
     } deriving (Generic, Show)
 
 instance ToJSON Meta where
@@ -64,6 +66,10 @@ instance ToJSON Content where
     toJSON (ContentDiscussion x) = toJSON x
     toJSON (ContentEvent x)     = toJSON x
 
+instance HasContentKey Content where
+    contentKey (ContentDiscussion x) = contentKey x
+    contentKey (ContentEvent x) = contentKey x
+
 instance FromJSON Content where
     parseJSON x = ContentDiscussion <$> parseJSON x
               <|> ContentEvent <$> parseJSON x
@@ -73,25 +79,45 @@ instance ToSample Timeline Timeline where
                   , ("Timeline for 25th Dec 2015", sampleTimeline2)
                   ]
 
-timeline :: Maybe UTCTime -> UTCTime -> [Content] -> [Ratings] -> Timeline
-timeline (Just from) till content ratings = timeline Nothing till (filter (\x -> happened x > from) content) ratings
-timeline _ till content ratings = Timeline till
-    $ map    (\x -> attachMeta (M.lookup (ContentKey (identifier x) (getSuperType x)) ratingsMap) x)
+instance ToSample Content Content where
+    toSamples _ = 
+        [ ("A discussion",ContentDiscussion sampleDiscussionParent)
+        , ("An event",ContentEvent sampleEvent1)
+        ]
+
+-- TODO Move this to timeline-service but keep samples somehow here
+
+timeline :: Maybe UTCTime -> UTCTime -> [Content] -> [Ratings] -> [Notification] -> Timeline
+timeline (Just from) till content ratings subs = timeline Nothing till (filter (\x -> happened x > from) content) ratings subs
+timeline _ till content ratings subs = Timeline till
+    $ map (\x -> attachMeta 
+        (M.lookup (contentKey x) ratingsMap) 
+        (M.lookup (contentKey x) subsMap)
+         x)
     $ sortBy (\x y -> compare (happened y) (happened x))
     $ filter (\x -> happened x < till) content
-    where ratingsMap = foldr (\r m -> M.insert (contentKey r) r m) M.empty ratings
+    where ratingsMap = toMap ratings
+          subsMap = toMap subs
+          toMap ls = foldr (\x m -> M.insert (contentKey x) x m) M.empty ls
 
-attachMeta :: Maybe Ratings -> Content -> Meta
-attachMeta r c = Meta (happened c) c r
+attachMeta :: Maybe Ratings -> Maybe Notification -> Content -> Meta
+attachMeta r s c = Meta (happened c) c r (isSubscribed s)
+
+--isSubscribed = maybe False (notificationPersistence == "persistent")
+isSubscribed = maybe False (\x -> maybe True (=="persistent") $ notificationPersistence x)
 
 sampleTimeline1 = sampleTimeline (UTCTime (fromGregorian 2015 12 20) (60*60*2))
 sampleTimeline2 = sampleTimeline (UTCTime (fromGregorian 2015 12 25) (60*60*12))
 sampleTimeline till = timeline Nothing till 
-    [ ContentDiscussion sampleDiscussionParent
-    , ContentEvent sampleEvent1
-    , ContentEvent sampleEvent2
+    [ContentDiscussion sampleDiscussionParent
+    ,ContentEvent sampleEvent1
+    ,ContentEvent sampleEvent2
     ]
     [sampleRatingsNoLikes (discussionId sampleDiscussionParent) "post"
     ,sampleRatingsNoLikes (eventId sampleEvent1) "event"
     ,sampleRatingsNoLikes (eventId sampleEvent2) "event"
+    ]
+    [sampleNotificationFor (discussionId sampleDiscussionParent) "post"
+    ,sampleNotificationFor (eventId sampleEvent1) "event"
+    ,sampleNotificationFor (eventId sampleEvent2) "event"
     ]

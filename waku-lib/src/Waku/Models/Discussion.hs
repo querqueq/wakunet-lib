@@ -34,6 +34,9 @@ instance ToJSON Discussion where
 instance FromJSON Discussion where 
     parseJSON = parseJSONPrefixed
 
+instance HasContentKey Discussion where
+    contentKey = discussionContentKey
+
 instance HasHappened Discussion where
     happened (Discussion {..}) = discussionCreated
 
@@ -96,6 +99,7 @@ sampleDiscussionParent = defaultDiscussion
     , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19)
     , discussionUpdated = Nothing
     , discussionSubPosts = [sampleDiscussionComment1, sampleDiscussionComment2]
+    , discussionContentKey = ContentKey 1 "post"
     }
 
 sampleDiscussionComment1 = defaultDiscussion

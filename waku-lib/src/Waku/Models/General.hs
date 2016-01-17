@@ -13,6 +13,7 @@ module Waku.Models.General
     , HasCreator(..)
     , HasHappened(..)
     , HasType(..)
+    , HasContentKey(..)
     , Id
     , ContentType
     , ContentId
@@ -39,8 +40,8 @@ data ContentKey = ContentKey
     , contentType   :: ContentType
     } deriving (Show, Generic, Eq, Ord)
 
-instance ToJSON ContentKey
-instance FromJSON ContentKey
+instance ToJSON ContentKey where
+instance FromJSON ContentKey where
 
 toJSONPrefixed :: (Generic a, GToJSON (Rep a)) => a -> Value
 toJSONPrefixed = genericToJSON $ aesonPrefix camelCase
@@ -61,5 +62,14 @@ class HasType a where
     getType :: a -> String
     getSuperType :: a -> String
 
+class Transformable a b where
+    transform :: Maybe b -> a -> b
+
+class HasContentKey a where
+    contentKey :: a -> ContentKey
+
 instance ToSample Id Id where
     toSample _ = Just 1
+
+instance HasContentKey ContentKey where
+    contentKey = id

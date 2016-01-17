@@ -8,12 +8,14 @@
 {-# LANGUAGE OverloadedStrings      #-}
 module Waku.Models.ExternalAccess where
 
-import Waku.Models.General
 import Data.Time        (UTCTime(..),fromGregorian)
 import Data.Maybe       (fromMaybe,fromJust)
 import Servant.Docs     (ToSample(..))
 import qualified Data.UUID as U
 import Data.UUID.Aeson
+
+import Waku.Models.General
+import Waku.Models.Profile
 
 type ExternalAccessId = U.UUID
 data ExternalAccess = ExternalAccess
@@ -39,6 +41,9 @@ instance HasCreator ExternalAccess where
 instance ToSample ExternalAccess ExternalAccess where
     toSample _ = Just $ sampleExternalAccess 1
 
+instance ToSample ExternalAccessId ExternalAccessId where
+    toSample _ = U.fromString "a91a964b-6ace-454b-a5ac-5a37315d23f3"
+
 defaultExternalAccess = ExternalAccess
     { externalAccessUuid = U.nil
     , externalAccessCreatorId = 1
@@ -51,4 +56,3 @@ defaultExternalAccess = ExternalAccess
     }
 
 sampleExternalAccess 1 = defaultExternalAccess {externalAccessUuid = fromJust $ U.fromString "1c012ed3-877d-44b8-87ac-eae9b1ef7b1b"}
- 

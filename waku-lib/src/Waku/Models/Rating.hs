@@ -23,26 +23,19 @@ import Servant.Docs
 
 import Waku.Models.General
 
-{-- Previous implementation of ContentKey a Tuple
-type ContentKey = (ContentId,ContentType)
-
-instance ToJSON ContentKey where
-    toJSON (cid, ct) = object ["contentId" .= cid, "contentType" .= ct]
-
-instance FromJSON ContentKey where
-    parseJSON (Object k) = (,) <$> k .: "contentId" <*> k .: "contentType"
---}
-
 data Ratings = Ratings
-    { likes         :: Int
-    , dislikes      :: Int
-    , contentKey    :: ContentKey
-    , userId        :: Id
-    , userRating    :: Maybe String
+    { ratingsLikes         :: Int
+    , ratingsDislikes      :: Int
+    , ratingsContentKey    :: ContentKey
+    , ratingsUserId        :: Id
+    , ratingsUserRating    :: Maybe String
     } deriving (Show,Eq,Generic)
 
-instance ToJSON Ratings
-instance FromJSON Ratings
+instance ToJSON Ratings where toJSON = toJSONPrefixed
+instance FromJSON Ratings where parseJSON = parseJSONPrefixed
+
+instance HasContentKey Ratings where
+    contentKey = ratingsContentKey
 
 instance ToSample Ratings Ratings where
     toSample _ = Just $ sampleRatings

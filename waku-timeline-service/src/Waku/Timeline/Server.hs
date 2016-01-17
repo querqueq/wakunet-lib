@@ -44,13 +44,14 @@ getTimeline :: Maybe Id -> Maybe UTCTime -> Maybe UTCTime -> Maybe Id -> IO (Eit
 getTimeline Nothing _ _ _ = return $ Left errNoSenderId
 -- | No till date given. Calls getTimeline with current date as till date
 getTimeline x y Nothing z = getCurrentTime >>= \now -> getTimeline x y (Just now) z
-getTimeline userId from (Just till) group = do
+getTimeline userId@(Just uid) from (Just till) group = do
     discs  <- runEitherT $ map ContentDiscussion <$> maybe (getDiscussions userId) (getDiscussionsForGroup userId) group
-    events <- runEitherT $ map ContentEvent <$> getEventsByUser (fromJust userId)
+    events <- runEitherT $ map ContentEvent <$> getEventsByUser uid
     case (++) <$> discs <*> events of
         Right x -> do
             ratings <- runEitherT $ bulkRatings userId $ contentKeys x
-            return $ Right $ timeline from till x $ rightToList ratings
+            subs    <- runEitherT $ getSubscriptionsByUserId uid
+            return $ Right $ timeline from till x (rightToList ratings) (rightToList subs)
         Left x -> return $ Left $ errForward x
 
 rightToList :: Either a [b] -> [b]
@@ -58,4 +59,4 @@ rightToList (Right xs) = xs
 rightToList (Left _) = []
 
 contentKeys :: [Content] -> [ContentKey]
-contentKeys = map (\c -> ContentKey (identifier c) (getSuperType c))
+contentKeys = map contentKey
