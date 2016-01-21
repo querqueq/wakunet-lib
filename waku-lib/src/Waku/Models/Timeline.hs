@@ -16,7 +16,7 @@ import Waku.Models.Rating
 import Waku.Models.Notification
 import Data.Time        (UTCTime(..),fromGregorian)
 import Data.Maybe       (fromMaybe, isJust)
-import Data.List        (sort,sortBy)
+import Data.List        (sort,sortBy, nub)
 import Data.Dynamic
 import qualified Data.Map as M
 import Servant.Docs     (ToSample(..))
@@ -71,8 +71,10 @@ instance HasContentKey Content where
     contentKey (ContentEvent x) = contentKey x
 
 participatingUsers :: Content -> [Id]
-participatingUsers (ContentDiscussion (Discussion {..})) = discussionCreatorId : concat (map (participatingUsers.ContentDiscussion) discussionSubPosts)
-participatingUsers (ContentEvent (Event {..})) = eventParticipants
+participatingUsers x = let
+    f (ContentDiscussion (Discussion {..})) = discussionCreatorId : concat (map (f.ContentDiscussion) discussionSubPosts)
+    f (ContentEvent (Event {..})) = nub eventParticipants
+    in nub $ f x
 
 instance FromJSON Content where
     parseJSON x = ContentDiscussion <$> parseJSON x
