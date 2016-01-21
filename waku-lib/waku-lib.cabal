@@ -24,8 +24,10 @@ library
     , Waku.APIs.EventAPI
     , Waku.APIs.ExternalAccessAPI
     , Waku.APIs.UserAPI
+    , Waku.APIs.MailAPI
     , Waku.APIs.Util
     , Waku.APIs.NotificationAPI
+    , Waku.APIs.ProfileAPI
     , Waku.Clients.DiscussionClient
     , Waku.Clients.RatingClient
     , Waku.Clients.EventClient
@@ -33,6 +35,8 @@ library
     , Waku.Clients.TimelineClient
     , Waku.Clients.ExternalAccessClient
     , Waku.Clients.UserClient
+    , Waku.Clients.MailClient
+    , Waku.Clients.ProfileClient
     , Waku.Clients.NotificationClient
     , Waku.Models.Rating
     , Waku.Models.Event
@@ -43,6 +47,8 @@ library
     , Waku.Models.Profile
     , Waku.Models.User
     , Waku.Models.Notification
+    , Waku.Models.Url
+    , Waku.Models.Mail
   -- other-modules:
   other-extensions:    OverloadedStrings, RecordWildCards, DataKinds, TypeOperators, TypeFamilies, FlexibleContexts, PolyKinds, FlexibleInstances, MultiParamTypeClasses, TypeSynonymInstances, DeriveGeneric, GeneralizedNewtypeDeriving, EmptyDataDecls, GADTs, QuasiQuotes, TemplateHaskell, FunctionalDependencies
   build-depends:
@@ -64,5 +70,6 @@ library
     , containers >=0.5 && <0.6
     , uuid
     , uuid-aeson
+    , bytestring
   hs-source-dirs:      src
   default-language:    Haskell2010

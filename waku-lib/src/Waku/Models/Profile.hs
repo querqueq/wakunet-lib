@@ -13,13 +13,22 @@ import Data.Time        (UTCTime(..),fromGregorian)
 import Data.Maybe       (fromMaybe)
 import Servant.Docs     (ToSample(..))
 
+data ProfileRequest = ProfileRequest
+    { prUserIds     :: [Id] 
+    } deriving (Show, Eq, Generic)
+
+instance ToJSON ProfileRequest where 
+    toJSON = toJSONPrefixed
+
+instance FromJSON ProfileRequest where 
+    parseJSON = parseJSONPrefixed
+
 data Profile = Profile
     { profileUserId              :: Id
     , profileFirstName           :: String
     , profileSurname             :: String
     , profilePicture             :: Maybe String
-    , profileLargeProfilePicture :: Maybe String
-    , profileSmallProfilePicture :: Maybe String
+    , profileProfilePicture      :: Maybe String
     , profileState               :: Maybe String
     , profileGender              :: Maybe String
     , profileEmail               :: Maybe String
@@ -36,6 +45,9 @@ instance FromJSON Profile where
 instance HasId Profile where
     identifier (Profile {..}) = profileUserId
 
+instance ToSample ProfileRequest ProfileRequest where
+    toSample _ = Just $ sampleProfileRequest 1
+
 instance ToSample Profile Profile where
     toSample _ = Just $ sampleProfile 1
 
@@ -47,8 +59,7 @@ defaultProfile = Profile
     , profileFirstName = "John"
     , profileSurname = "Doe"
     , profilePicture = Nothing
-    , profileLargeProfilePicture = Nothing
-    , profileSmallProfilePicture = Nothing
+    , profileProfilePicture = Nothing
     , profileState = Nothing
     , profileGender = Nothing
     , profileEmail = Nothing
@@ -57,3 +68,4 @@ defaultProfile = Profile
     }
 
 sampleProfile 1 = defaultProfile
+sampleProfileRequest 1 = ProfileRequest [1,5,13]

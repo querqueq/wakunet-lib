@@ -6,6 +6,8 @@ module Waku.Clients
     , module Waku.Clients.ExternalAccessClient
     , module Waku.Clients.UserClient
     , module Waku.Clients.NotificationClient
+    , module Waku.Clients.MailClient
+    , module Waku.Clients.ProfileClient
     ) where
 
 import Waku.Clients.Util
@@ -16,6 +18,8 @@ import Waku.Clients.EventClient
 import Waku.Clients.ExternalAccessClient
 import Waku.Clients.UserClient
 import Waku.Clients.NotificationClient
+import Waku.Clients.MailClient
+import Waku.Clients.ProfileClient
 import Control.Monad.Trans.Either   (runEitherT,EitherT)
 
 -- TODO make clients configureable (no hardcoded targets)

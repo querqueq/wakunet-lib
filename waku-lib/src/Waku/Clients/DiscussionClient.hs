@@ -8,4 +8,5 @@ import Waku.APIs.DiscussionAPI           (discussionAPI)
 getDiscussions
     :<|> getDiscussion
     :<|> getDiscussionsForGroup
+    :<|> createDiscussion
     = client discussionAPI (BaseUrl Http "wakunet-discussion-service.herokuapp.com" 80)

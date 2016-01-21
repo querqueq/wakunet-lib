@@ -20,6 +20,7 @@ module Waku.Models.General
     , ContentKey(..)
     , toJSONPrefixed
     , parseJSONPrefixed
+    , AString(..)
     ) where
 
 import Data.Aeson
@@ -43,11 +44,27 @@ data ContentKey = ContentKey
 instance ToJSON ContentKey where
 instance FromJSON ContentKey where
 
+data AString = AString
+    { astringValue :: String
+    } deriving (Show, Generic, Eq)
+
+instance ToJSON AString where
+    toJSON = toJSONPrefixed
+
+instance FromJSON AString where
+    parseJSON = parseJSONPrefixed 
+
 toJSONPrefixed :: (Generic a, GToJSON (Rep a)) => a -> Value
 toJSONPrefixed = genericToJSON $ aesonPrefix camelCase
 
 parseJSONPrefixed :: (Generic a, GFromJSON (Rep a)) => Value -> Parser a
 parseJSONPrefixed = genericParseJSON $ aesonPrefix camelCase
+
+instance ToSample ContentKey ContentKey where
+    toSample _ = Just $ ContentKey 13 "post"
+
+instance ToSample [ContentKey] [ContentKey] where
+    toSample _ = Just [ContentKey 13 "post",ContentKey 4 "event",ContentKey 1 "post"]
 
 class HasId a where
     identifier :: a -> Id
@@ -70,6 +87,9 @@ class HasContentKey a where
 
 instance ToSample Id Id where
     toSample _ = Just 1
+
+instance ToSample AString AString where
+    toSample _ = Just $ AString "Lorem Ipsum"
 
 instance HasContentKey ContentKey where
     contentKey = id

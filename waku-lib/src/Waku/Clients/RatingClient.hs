@@ -16,7 +16,7 @@ like        :: Maybe SenderId -> ContentType -> ContentId -> ClientResponse ()
 dislike     :: Maybe SenderId -> ContentType -> ContentId -> ClientResponse ()
 unlike      :: Maybe SenderId -> ContentType -> ContentId -> ClientResponse ()
 getRatings  :: Maybe SenderId -> ContentType -> ContentId -> ClientResponse Ratings
-bulkRatings :: Maybe SenderId -> [ContentKey] -> ClientResponse [Ratings]
+bulkRatings :: Maybe SenderId -> [ContentKey]             -> ClientResponse [Ratings]
 like
     :<|> dislike
     :<|> unlike

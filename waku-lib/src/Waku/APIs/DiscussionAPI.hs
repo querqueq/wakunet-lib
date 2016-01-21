@@ -16,5 +16,7 @@ type DiscussionAPI =
          "posts" :> SenderId :> Get '[JSON] [Discussion]
     :<|> "posts" :> SenderId :> PostId :> Get '[JSON] Discussion
     :<|> "posts" :> SenderId :> "group" :> GroupId :> Get '[JSON] [Discussion]
+    :<|> "posts" :> SenderId :> ReqBody '[JSON] Discussion :> Post '[JSON] Discussion
+
 discussionAPI :: Proxy DiscussionAPI
 discussionAPI = Proxy

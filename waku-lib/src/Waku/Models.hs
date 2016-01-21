@@ -7,6 +7,9 @@ module Waku.Models
     , module Waku.Models.User
     , module Waku.Models.Profile
     , module Waku.Models.Notification
+    , module Waku.Models.Url
+    , module Waku.Models.General
+    , module Waku.Models.Mail
     ) where
 
 import Waku.Models.Discussion
@@ -17,3 +20,6 @@ import Waku.Models.ExternalAccess
 import Waku.Models.User
 import Waku.Models.Profile
 import Waku.Models.Notification
+import Waku.Models.Url
+import Waku.Models.General
+import Waku.Models.Mail

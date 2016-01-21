@@ -70,6 +70,10 @@ instance HasContentKey Content where
     contentKey (ContentDiscussion x) = contentKey x
     contentKey (ContentEvent x) = contentKey x
 
+participatingUsers :: Content -> [Id]
+participatingUsers (ContentDiscussion (Discussion {..})) = discussionCreatorId : concat (map (participatingUsers.ContentDiscussion) discussionSubPosts)
+participatingUsers (ContentEvent (Event {..})) = eventParticipants
+
 instance FromJSON Content where
     parseJSON x = ContentDiscussion <$> parseJSON x
               <|> ContentEvent <$> parseJSON x
