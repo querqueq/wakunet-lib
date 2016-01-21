@@ -7,6 +7,8 @@ module Waku.APIs
     , module Waku.APIs.NotificationAPI
     , module Waku.APIs.StickyAPI
     , module Waku.APIs.MailAPI
+    , module Waku.APIs.ChatAPI
+    , updateDocs
     ) where
 
 import Waku.APIs.DiscussionAPI
@@ -17,6 +19,7 @@ import Waku.APIs.NotificationAPI
 import Waku.APIs.StickyAPI
 import Waku.APIs.MailAPI
 import Waku.APIs.Util
+import Waku.APIs.ChatAPI
 import Servant.Docs
 import Servant
 

@@ -35,7 +35,7 @@ type ExternalAccessAPI =
          -- Returns all external accesses for a content
     :<|> "externals" :> SenderId :> CaptureContentType :> CaptureContentId :> Get '[JSON] [ExternalAccess]
          -- Notifies the external user of the external access 
-    :<|> "externals" :> SenderId :> CaptureExternalAccessId :> "notify" :> ReqBody '[JSON] Url :> Put '[JSON] ()
+    :<|> "externals" :> SenderId :> CaptureExternalAccessId :> "notify" :> ReqBody '[JSON] Url :> Post '[JSON] ()
 
 externalAccessAPI :: Proxy ExternalAccessAPI
 externalAccessAPI = Proxy

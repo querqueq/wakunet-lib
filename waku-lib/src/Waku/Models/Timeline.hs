@@ -12,6 +12,7 @@ import Control.Applicative
 import Waku.Models.General
 import Waku.Models.Discussion
 import Waku.Models.Event
+import Waku.Models.Chat
 import Waku.Models.Rating
 import Waku.Models.Notification
 import Data.Time        (UTCTime(..),fromGregorian)
@@ -46,11 +47,13 @@ instance FromJSON Meta where
 
 data Content = ContentDiscussion Discussion
              | ContentEvent Event
+             | ContentChatDescriptor ChatDescriptor
              deriving Show
 
 instance HasId Content where
     identifier (ContentDiscussion x) = identifier x
     identifier (ContentEvent x) = identifier x
+    identifier (ContentChatDescriptor x) = identifier x
 
 instance HasHappened Content where
     happened (ContentDiscussion x) = happened x
@@ -65,6 +68,7 @@ instance HasType Content where
 instance ToJSON Content where
     toJSON (ContentDiscussion x) = toJSON x
     toJSON (ContentEvent x)     = toJSON x
+    toJSON (ContentChatDescriptor x)     = toJSON x
 
 instance HasContentKey Content where
     contentKey (ContentDiscussion x) = contentKey x
@@ -73,7 +77,8 @@ instance HasContentKey Content where
 participatingUsers :: Content -> [Id]
 participatingUsers x = let
     f (ContentDiscussion (Discussion {..})) = discussionCreatorId : concat (map (f.ContentDiscussion) discussionSubPosts)
-    f (ContentEvent (Event {..})) = nub eventParticipants
+    f (ContentEvent (Event {..})) = eventParticipants
+    f (ContentChatDescriptor (ChatDescriptor {..})) = cdParticipants
     in nub $ f x
 
 instance FromJSON Content where

@@ -25,9 +25,11 @@ library
     , Waku.APIs.ExternalAccessAPI
     , Waku.APIs.UserAPI
     , Waku.APIs.MailAPI
+    , Waku.APIs.StickyAPI
     , Waku.APIs.Util
     , Waku.APIs.NotificationAPI
     , Waku.APIs.ProfileAPI
+    , Waku.APIs.ChatAPI
     , Waku.Clients.DiscussionClient
     , Waku.Clients.RatingClient
     , Waku.Clients.EventClient
@@ -36,6 +38,7 @@ library
     , Waku.Clients.ExternalAccessClient
     , Waku.Clients.UserClient
     , Waku.Clients.MailClient
+    , Waku.Clients.ChatClient
     , Waku.Clients.ProfileClient
     , Waku.Clients.NotificationClient
     , Waku.Models.Rating
@@ -46,6 +49,7 @@ library
     , Waku.Models.ExternalAccess
     , Waku.Models.Profile
     , Waku.Models.User
+    , Waku.Models.Chat
     , Waku.Models.Notification
     , Waku.Models.Url
     , Waku.Models.Mail
