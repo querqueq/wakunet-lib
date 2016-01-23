@@ -18,6 +18,7 @@ library
     , Waku.Models
     , Waku.Servers.Errors
     , Waku.Servers.Util
+    , Waku.APIs
     , Waku.APIs.DiscussionAPI
     , Waku.APIs.TimelineAPI
     , Waku.APIs.RatingAPI
