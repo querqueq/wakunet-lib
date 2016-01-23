@@ -24,7 +24,7 @@ data Discussion = Discussion
     , discussionUpdated       :: Maybe UTCTime
     , discussionSubPosts      :: [Discussion]
     , discussionType          :: Maybe String
-    --, discussionSuperType     :: String
+    , discussionSticky        :: Bool
     , discussionContentKey    :: ContentKey
     } deriving (Eq, Generic, Show)
 
@@ -86,6 +86,7 @@ defaultDiscussion = Discussion
     , discussionSubPosts = []
     , discussionType = Just "fullPost"
     , discussionContentKey = ContentKey 0 "post"
+    , discussionSticky = False
     }
 
 

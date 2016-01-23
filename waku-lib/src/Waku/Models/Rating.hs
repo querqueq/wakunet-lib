@@ -26,7 +26,6 @@ import Waku.Models.General
 data Ratings = Ratings
     { ratingsLikes         :: Int
     , ratingsDislikes      :: Int
-    , ratingsStickied      :: Bool
     , ratingsContentKey    :: ContentKey
     , ratingsUserId        :: Id
     , ratingsUserRating    :: Maybe String
@@ -44,5 +43,5 @@ instance ToSample Ratings Ratings where
 instance ToSample [Ratings] [Ratings] where
     toSample _ = Just $ [sampleRatings, sampleRatingsNoLikes 3 "event", sampleRatingsNoLikes 5 "post"]
 
-sampleRatings = Ratings 2 1 False (ContentKey 13 "post") 2 $ Just "Dislike"
-sampleRatingsNoLikes id ctype = Ratings 0 0 False (ContentKey id ctype) 2 Nothing
+sampleRatings = Ratings 2 1 (ContentKey 13 "post") 2 $ Just "Dislike"
+sampleRatingsNoLikes id ctype = Ratings 0 0 (ContentKey id ctype) 2 Nothing

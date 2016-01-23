@@ -24,7 +24,8 @@ import Servant.Docs     (ToSample(..))
 
 data Timeline = Timeline
     { timelineTill      :: UTCTime
-    , timelineContents   :: [Meta]
+    , timelineContents  :: [Meta]
+    , timelineStickies  :: [Meta]
     } deriving (Generic, Show)
 
 instance ToJSON Timeline where
@@ -37,6 +38,7 @@ data Meta = Meta
     , metaContent       :: Content
     , metaRatings       :: Maybe Ratings
     , metaSubscribed    :: Bool
+    , metaSticky        :: Bool
     } deriving (Generic, Show)
 
 instance ToJSON Meta where
@@ -96,23 +98,29 @@ instance ToSample Content Content where
         , ("An event",ContentEvent sampleEvent1)
         ]
 
--- TODO Move this to timeline-service but keep samples somehow here
+-- TODO Move this to timeline-service
+-- 1. Write full timeline sample
+-- 2. move code to timeline-service
+-- 3. add quicktests to timeline-service which compare samle with result of timeline
 
 timeline :: Maybe UTCTime -> UTCTime -> [Content] -> [Ratings] -> [Notification] -> Timeline
 timeline (Just from) till content ratings subs = timeline Nothing till (filter (\x -> happened x > from) content) ratings subs
-timeline _ till content ratings subs = Timeline till
-    $ map (\x -> attachMeta 
-        (M.lookup (contentKey x) ratingsMap) 
-        (M.lookup (contentKey x) subsMap)
-         x)
-    $ sortBy (\x y -> compare (happened y) (happened x))
-    $ filter (\x -> happened x < till) content
+timeline _ till content ratings subs = Timeline till 
+    (filter (\(Meta {..}) -> not metaSticky) list) 
+    (filter (\(Meta {..}) -> metaSticky) list)
     where ratingsMap = toMap ratings
           subsMap = toMap subs
           toMap ls = foldr (\x m -> M.insert (contentKey x) x m) M.empty ls
+          list = map (\x -> attachMeta (M.lookup (contentKey x) ratingsMap) (M.lookup (contentKey x) subsMap) x)
+            $ sortBy (\x y -> compare (happened y) (happened x))
+            $ filter (\x -> happened x < till) content
+
 
 attachMeta :: Maybe Ratings -> Maybe Notification -> Content -> Meta
-attachMeta r s c = Meta (happened c) c r (isSubscribed s)
+attachMeta r s c = Meta (happened c) c r (isSubscribed s) (isStickied c)
+
+isStickied (ContentDiscussion (Discussion {..})) = discussionSticky
+isStickied _ = False
 
 --isSubscribed = maybe False (notificationPersistence == "persistent")
 isSubscribed = maybe False (\x -> maybe True (=="persistent") $ notificationPersistence x)
@@ -120,7 +128,7 @@ isSubscribed = maybe False (\x -> maybe True (=="persistent") $ notificationPers
 sampleTimeline1 = sampleTimeline (UTCTime (fromGregorian 2015 12 20) (60*60*2))
 sampleTimeline2 = sampleTimeline (UTCTime (fromGregorian 2015 12 25) (60*60*12))
 sampleTimeline till = timeline Nothing till 
-    [ContentDiscussion sampleDiscussionParent
+    [ContentDiscussion $ sampleDiscussionParent { discussionSticky = True } 
     ,ContentEvent sampleEvent1
     ,ContentEvent sampleEvent2
     ]
