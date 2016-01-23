@@ -9,6 +9,7 @@ module Waku.Clients
     , module Waku.Clients.MailClient
     , module Waku.Clients.ProfileClient
     , module Waku.Clients.ChatClient
+    , module Waku.Clients.GroupClient
     ) where
 
 import Waku.Clients.Util
@@ -22,6 +23,7 @@ import Waku.Clients.NotificationClient
 import Waku.Clients.MailClient
 import Waku.Clients.ProfileClient
 import Waku.Clients.ChatClient
+import Waku.Clients.GroupClient
 import Control.Monad.Trans.Either   (runEitherT,EitherT)
 
 -- TODO make clients configureable (no hardcoded targets)

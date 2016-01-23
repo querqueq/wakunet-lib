@@ -30,6 +30,7 @@ library
     , Waku.APIs.NotificationAPI
     , Waku.APIs.ProfileAPI
     , Waku.APIs.ChatAPI
+    , Waku.APIs.GroupAPI
     , Waku.Clients.DiscussionClient
     , Waku.Clients.RatingClient
     , Waku.Clients.EventClient
@@ -41,6 +42,7 @@ library
     , Waku.Clients.ChatClient
     , Waku.Clients.ProfileClient
     , Waku.Clients.NotificationClient
+    , Waku.Clients.GroupClient
     , Waku.Models.Rating
     , Waku.Models.Event
     , Waku.Models.Discussion
@@ -53,6 +55,7 @@ library
     , Waku.Models.Notification
     , Waku.Models.Url
     , Waku.Models.Mail
+    , Waku.Models.Group
   -- other-modules:
   other-extensions:    OverloadedStrings, RecordWildCards, DataKinds, TypeOperators, TypeFamilies, FlexibleContexts, PolyKinds, FlexibleInstances, MultiParamTypeClasses, TypeSynonymInstances, DeriveGeneric, GeneralizedNewtypeDeriving, EmptyDataDecls, GADTs, QuasiQuotes, TemplateHaskell, FunctionalDependencies
   build-depends:

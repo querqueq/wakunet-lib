@@ -11,6 +11,7 @@ module Waku.Models
     , module Waku.Models.General
     , module Waku.Models.Mail
     , module Waku.Models.Chat
+    , module Waku.Models.Group
     ) where
 
 import Waku.Models.Discussion
@@ -25,3 +26,4 @@ import Waku.Models.Url
 import Waku.Models.General
 import Waku.Models.Mail
 import Waku.Models.Chat
+import Waku.Models.Group

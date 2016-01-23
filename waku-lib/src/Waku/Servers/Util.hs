@@ -18,3 +18,7 @@ ioMaybeToEitherT err x = do
 ioEitherToEitherT :: MonadIO m => IO (Either ServantErr a) -> EitherT ServantErr m a
 ioEitherToEitherT x = liftIO x >>= hoistEither
 
+require :: [(Bool,ServantErr)] -> EitherT ServantErr IO a -> EitherT ServantErr IO a
+require checks f = case foldl (\errs (x,err) -> if x then err:errs else errs) [] checks of
+    [] -> f
+    x:_ -> left x
