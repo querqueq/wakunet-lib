@@ -27,7 +27,7 @@ type ExternalAccessAPI =
          -- Returns content for external access
     :<|> "externals" :> CaptureExternalAccessId :> "content" :> Get '[JSON] ExternalContent
          -- Post content for external accessible content
-    :<|> "externals" :> CaptureExternalAccessId :> "content" :> ReqBody '[JSON] NewContent :> Post '[JSON] ()
+    :<|> "externals" :> CaptureExternalAccessId :> "content" :> ReqBody '[JSON] NewContent :> Post '[JSON] Content
          -- Sets an alias for the external user 
     :<|> "externals" :> CaptureExternalAccessId :> "alias" :> ReqBody '[JSON] AString  :> Post '[JSON] ()
          -- Revokes external access
