@@ -27,7 +27,6 @@ data Profile = Profile
     { profileUserId              :: Id
     , profileFirstName           :: Maybe String
     , profileSurname             :: Maybe String
-    , profilePicture             :: Maybe String
     , profileProfilePicture      :: Maybe String
     , profileState               :: Maybe String
     , profileGender              :: Maybe String
@@ -58,7 +57,6 @@ defaultProfile = Profile
     { profileUserId = 1
     , profileFirstName = Just "John"
     , profileSurname = Just "Doe"
-    , profilePicture = Nothing
     , profileProfilePicture = Nothing
     , profileState = Nothing
     , profileGender = Nothing
@@ -69,3 +67,6 @@ defaultProfile = Profile
 
 sampleProfile 1 = defaultProfile
 sampleProfileRequest 1 = ProfileRequest [1,5,13]
+
+emptyProfile :: Id -> Profile
+emptyProfile userId = Profile userId Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
