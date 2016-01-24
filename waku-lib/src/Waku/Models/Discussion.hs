@@ -13,6 +13,18 @@ import Data.Time        (UTCTime(..),fromGregorian)
 import Data.Maybe       (fromMaybe)
 import Servant.Docs     (ToSample(..))
 
+data NewDiscussion = NewDiscussion
+    { ndText        :: String
+    , ndParentId    :: Maybe Id
+    , ndGroupId     :: Maybe Id
+    } deriving (Eq, Generic, Show)
+
+instance ToJSON NewDiscussion where 
+    toJSON = toJSONPrefixed
+
+instance FromJSON NewDiscussion where 
+    parseJSON = parseJSONPrefixed
+
 data Discussion = Discussion
     { discussionId            :: Id
     , discussionCreatorId     :: Id
@@ -22,7 +34,7 @@ data Discussion = Discussion
     , discussionText          :: String
     , discussionCreated       :: UTCTime 
     , discussionUpdated       :: Maybe UTCTime
-    , discussionSubPosts      :: [Discussion]
+    , discussionSubPosts      :: Maybe [Discussion]
     , discussionType          :: Maybe String
     , discussionSticky        :: Bool
     , discussionContentKey    :: ContentKey
@@ -74,6 +86,17 @@ instance ToSample Discussion Discussion where
 instance ToSample [Discussion] [Discussion] where
     toSample _ = Just [sampleDiscussionParent]
 
+instance ToSample NewDiscussion NewDiscussion where
+    toSample _ = Just $ sampleNewDiscussion 1
+
+defaultNewDiscussion = NewDiscussion
+    { ndText        = ""
+    , ndParentId    = Nothing
+    , ndGroupId     = Nothing
+    }
+
+sampleNewDiscussion 1 = defaultNewDiscussion { ndText = "Hi there!", ndParentId = Just 13 } 
+
 defaultDiscussion = Discussion
     { discussionId = 0
     , discussionCreatorId = 0
@@ -83,7 +106,7 @@ defaultDiscussion = Discussion
     , discussionText = ""
     , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19)
     , discussionUpdated = Nothing
-    , discussionSubPosts = []
+    , discussionSubPosts = Just []
     , discussionType = Just "fullPost"
     , discussionContentKey = ContentKey 0 "post"
     , discussionSticky = False
@@ -99,7 +122,7 @@ sampleDiscussionParent = defaultDiscussion
     , discussionText = "Hi there!"
     , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19)
     , discussionUpdated = Nothing
-    , discussionSubPosts = [sampleDiscussionComment1, sampleDiscussionComment2]
+    , discussionSubPosts = Just [sampleDiscussionComment1, sampleDiscussionComment2]
     , discussionContentKey = ContentKey 1 "post"
     }
 
@@ -112,7 +135,7 @@ sampleDiscussionComment1 = defaultDiscussion
     , discussionText = "Welcome to this group."
     , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19+120)
     , discussionUpdated = Nothing
-    , discussionSubPosts = []
+    , discussionSubPosts = Just []
     }
 
 sampleDiscussionComment2 = defaultDiscussion
@@ -124,5 +147,5 @@ sampleDiscussionComment2 = defaultDiscussion
     , discussionText = "Thanks!"
     , discussionCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19+232)
     , discussionUpdated = Nothing
-    , discussionSubPosts = []
+    , discussionSubPosts = Just []
     }

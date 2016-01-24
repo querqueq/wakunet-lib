@@ -47,10 +47,19 @@ instance ToJSON Meta where
 instance FromJSON Meta where
     parseJSON = parseJSONPrefixed
 
+data NewContent = NewContentDiscussion NewDiscussion deriving Show
+
+instance ToJSON NewContent where
+    toJSON (NewContentDiscussion x) = toJSON x
+
+instance FromJSON NewContent where
+    parseJSON x = NewContentDiscussion <$> parseJSON x
+
 data Content = ContentDiscussion Discussion
              | ContentEvent Event
              | ContentChatDescriptor ChatDescriptor
              deriving Show
+
 
 instance HasId Content where
     identifier (ContentDiscussion x) = identifier x
@@ -78,7 +87,7 @@ instance HasContentKey Content where
 
 participatingUsers :: Content -> [Id]
 participatingUsers x = let
-    f (ContentDiscussion (Discussion {..})) = discussionCreatorId : concat (map (f.ContentDiscussion) discussionSubPosts)
+    f (ContentDiscussion (Discussion {..})) = discussionCreatorId : concat (map (f.ContentDiscussion) $ maybe [] id discussionSubPosts)
     f (ContentEvent (Event {..})) = eventParticipants
     f (ContentChatDescriptor (ChatDescriptor {..})) = cdParticipants
     in nub $ f x
@@ -97,6 +106,9 @@ instance ToSample Content Content where
         [ ("A discussion",ContentDiscussion sampleDiscussionParent)
         , ("An event",ContentEvent sampleEvent1)
         ]
+
+instance ToSample NewContent NewContent where
+    toSamples _ = [ ("A new discussion", NewContentDiscussion $ sampleNewDiscussion 1)]
 
 -- TODO Move this to timeline-service
 -- 1. Write full timeline sample
