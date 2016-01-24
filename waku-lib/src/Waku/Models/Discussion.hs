@@ -14,9 +14,9 @@ import Data.Maybe       (fromMaybe)
 import Servant.Docs     (ToSample(..))
 
 data NewDiscussion = NewDiscussion
-    { ndText        :: String
-    , ndParentId    :: Maybe Id
-    , ndGroupId     :: Maybe Id
+    { ndText         :: String
+    , ndParentPostId :: Maybe Id
+    , ndGroupId      :: Maybe Id
     } deriving (Eq, Generic, Show)
 
 instance ToJSON NewDiscussion where 
@@ -91,11 +91,11 @@ instance ToSample NewDiscussion NewDiscussion where
 
 defaultNewDiscussion = NewDiscussion
     { ndText        = ""
-    , ndParentId    = Nothing
+    , ndParentPostId= Nothing
     , ndGroupId     = Nothing
     }
 
-sampleNewDiscussion 1 = defaultNewDiscussion { ndText = "Hi there!", ndParentId = Just 13 } 
+sampleNewDiscussion 1 = defaultNewDiscussion { ndText = "Hi there!", ndParentPostId = Just 13 } 
 
 defaultDiscussion = Discussion
     { discussionId = 0
