@@ -28,6 +28,7 @@ type ExternalAccessId = U.UUID
 data ExternalAccess = ExternalAccess
     { externalaccessUuid              :: ExternalAccessId
     , externalaccessCreatorId         :: Id
+    , externalaccessUserId            :: Id
     , externalaccessEmail             :: String
     , externalaccessAlias             :: Maybe String
     , externalaccessCreated           :: UTCTime 
@@ -97,6 +98,7 @@ defaultExternalAccessRequest = ExternalAccessRequest
 defaultExternalAccess = ExternalAccess
     { externalaccessUuid = U.nil
     , externalaccessCreatorId = 1
+    , externalaccessUserId = 22
     , externalaccessEmail = "john@example.org"
     , externalaccessAlias = Just "John"
     , externalaccessCreated = UTCTime (fromGregorian 2015 12 08) (fromIntegral 60*60*19) -- TODO replace with call to sample time

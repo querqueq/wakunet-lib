@@ -12,7 +12,9 @@ import Servant
 import Waku.Models
 import Waku.APIs.Util
 
-type ProfileAPI = "profiles" :> "partials" :> ReqBody '[JSON] ProfileRequest :> Post '[JSON] [Profile]
+type ProfileAPI = 
+         "profiles" :> "partials" :> ReqBody '[JSON] ProfileRequest :> Post '[JSON] [Profile]
+    :<|> "profiles" :> UserId :> ReqBody '[JSON] Profile :> Post '[JSON] Profile
 
 profileAPI :: Proxy ProfileAPI
 profileAPI = Proxy

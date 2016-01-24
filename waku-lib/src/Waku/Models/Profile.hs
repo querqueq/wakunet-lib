@@ -25,8 +25,8 @@ instance FromJSON ProfileRequest where
 
 data Profile = Profile
     { profileUserId              :: Id
-    , profileFirstName           :: String
-    , profileSurname             :: String
+    , profileFirstName           :: Maybe String
+    , profileSurname             :: Maybe String
     , profilePicture             :: Maybe String
     , profileProfilePicture      :: Maybe String
     , profileState               :: Maybe String
@@ -56,8 +56,8 @@ instance ToSample [Profile] [Profile] where
 
 defaultProfile = Profile
     { profileUserId = 1
-    , profileFirstName = "John"
-    , profileSurname = "Doe"
+    , profileFirstName = Just "John"
+    , profileSurname = Just "Doe"
     , profilePicture = Nothing
     , profileProfilePicture = Nothing
     , profileState = Nothing
